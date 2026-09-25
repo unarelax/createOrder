@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小票图样稿 · 姜蒜山药红薯（大字版）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#d4d7dc;color:#111;padding:16px 16px 60px;}
+h1{font-size:22px;margin-bottom:6px;}
+.intro{font-size:15px;line-height:1.8;color:#333;max-width:1100px;margin-bottom:14px;}
+.intro b{color:#000;}
+.sample{background:#fff;border:2px solid #222;padding:10px 14px;font-size:14px;margin-bottom:18px;max-width:1100px;line-height:1.8;}
+.sample .row{display:inline-block;margin-right:18px;font-weight:700;}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;position:sticky;top:0;background:#d4d7dc;padding:8px 0;z-index:5;}
+nav a{background:#fff;color:#111;text-decoration:none;padding:8px 12px;border:2px solid #111;font-size:14px;font-weight:700;}
+nav a:hover{background:#111;color:#fff;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:26px;}
+.card{background:#fff;border:2px solid #222;padding:12px 12px 20px;}
+.card h2{font-size:18px;margin-bottom:4px;}
+.card .why{font-size:13px;line-height:1.6;color:#444;margin-bottom:14px;min-height:44px;}
+.note{font-size:12px;color:#999;margin-top:10px;text-align:center;}
+
+/* ============ 小票公共 ============ */
+.paper{
+  width:400px;max-width:100%;margin:0 auto;
+  background:#fffdf5;border:2px solid #111;
+  padding:22px 20px;
+}
+.store{font-size:26px;font-weight:900;text-align:center;letter-spacing:1px;}
+.sub{font-size:15px;color:#666;text-align:center;margin-top:5px;}
+.divider{border-top:2px dashed #c9c2ab;margin:14px 0;}
+.meta{font-size:16px;line-height:2;color:#222;}
+.meta b{font-weight:900;}
+.foot{text-align:center;font-size:17px;color:#666;margin-top:12px;}
+
+/* ============ V1 大字账本表 ============ */
+.v1 table{width:100%;border-collapse:collapse;}
+.v1 th{font-size:16px;font-weight:900;text-align:left;padding:8px 4px;border-bottom:2px solid #111;background:#f3efe3;}
+.v1 th.r,.v1 td.r{text-align:right;}
+.v1 th.no,.v1 td.no{width:44px;text-align:center;padding-left:2px;padding-right:2px;}
+.v1 td.no{font-weight:900;color:#555;}
+.v1 td{font-size:27px;font-weight:800;padding:13px 4px;border-bottom:1px solid #e6e0d0;}
+.v1 td.amt{color:#d4380d;}
+.v1 .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;border-top:3px solid #111;padding-top:12px;}
+.v1 .total .lab{font-size:28px;font-weight:900;color:#d4380d;}
+.v1 .total .val{font-size:58px;font-weight:900;color:#d4380d;line-height:1;}
+
+/* ============ V2 大字清单，总价置底 ============ */
+.v2 .item{padding:14px 0;border-bottom:2px solid #eee;}
+.v2 .item .nm{font-size:38px;font-weight:900;line-height:1.2;}
+.v2 .item .row{font-size:29px;font-weight:800;margin-top:6px;color:#333;}
+.v2 .item .row .amt{color:#d4380d;font-weight:900;}
+.v2 .total{text-align:center;margin-top:18px;}
+.v2 .total .lab{font-size:27px;font-weight:800;color:#d4380d;}
+.v2 .total .val{font-size:78px;font-weight:900;color:#d4380d;line-height:1.05;}
+
+/* ============ V3 总价置顶 ============ */
+.v3 .pay{text-align:center;border:3px solid #d4380d;border-radius:12px;padding:16px 12px;background:#fff6f4;margin-bottom:16px;}
+.v3 .pay .lab{font-size:23px;font-weight:800;color:#d4380d;}
+.v3 .pay .val{font-size:82px;font-weight:900;color:#d4380d;line-height:1.1;}
+.v3 .item{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid #eee;}
+.v3 .item .l{font-size:25px;font-weight:800;}
+.v3 .item .l .n{font-size:26px;font-weight:900;color:#111;margin-right:8px;}
+.v3 .item .l .d{font-size:20px;font-weight:700;color:#666;}
+.v3 .item .r{font-size:25px;font-weight:900;color:#d4380d;}
+
+/* ============ V4 手写票（窄纸） ============ */
+.v4 .paper{width:340px;}
+.v4 .store{font-size:25px;}
+.v4 .item{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid #e6e0d0;}
+.v4 .item .l{font-size:32px;font-weight:900;}
+.v4 .item .l .d{font-size:22px;font-weight:800;color:#333;margin-left:8px;}
+.v4 .item .r{font-size:30px;font-weight:900;color:#d4380d;}
+.v4 .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;border-top:3px solid #111;padding-top:12px;}
+.v4 .total .lab{font-size:26px;font-weight:900;color:#d4380d;}
+.v4 .total .val{font-size:66px;font-weight:900;color:#d4380d;line-height:1;}
+</style>
+</head>
+<body>
+<h1>小票图样稿 · 姜蒜山药红薯（大字版，给 30–50 岁看）</h1>
+<p class="intro">
+  同一张单，四种排版。共同目标：<b>品名大、数量单价金额大、合计最大</b>，客户在手机上一眼看清该付多少钱。<br>
+  每张白纸就是将来导出成图片的样子，字号按最终 700px 宽的画布等比放大。点上面锚点跳着看，看完告诉我选哪一版或拼哪几版。
+</p>
+<div class="sample">
+  示例单：<span class="row">1 生姜 10斤 × 6元 = 60元</span><span class="row">2 大蒜 20斤 × 5元 = 100元</span><span class="row">3 山药 6斤 × 9元 = 54元</span><span class="row">4 红薯 40斤 × 3元 = 120元</span><span class="row" style="color:#d4380d">合计 334元</span>
+</div>
+<nav>
+  <a href="#v1">V1 大字账本表</a>
+  <a href="#v2">V2 大字清单 · 总价置底</a>
+  <a href="#v3">V3 总价置顶</a>
+  <a href="#v4">V4 手写票（窄纸）</a>
+</nav>
+
+<div class="grid">
+
+  <div class="card" id="v1">
+    <h2>V1 · 大字账本表（带序号）</h2>
+    <p class="why">序号、名称、数量、单价、金额五列并排，列头钉死，像账本一样对账。序号方便「第几样、几样货」核对。数字最大。</p>
+    <div class="paper v1">
+      <div class="store">老张蔬菜批发</div>
+      <div class="sub">姜蒜山药红薯 · 现称现卖</div>
+      <div class="divider"></div>
+      <div class="meta"><b>单号</b> 20260921-001　<b>时间</b> 2026-09-21 08:30<br><b>备注</b> 张老板</div>
+      <table>
+        <tr><th class="no">序号</th><th>名称</th><th class="r">数量</th><th class="r">单价</th><th class="r">金额</th></tr>
+        <tr><td class="no">1</td><td>生姜</td><td class="r">10斤</td><td class="r">6元</td><td class="r amt">60元</td></tr>
+        <tr><td class="no">2</td><td>大蒜</td><td class="r">20斤</td><td class="r">5元</td><td class="r amt">100元</td></tr>
+        <tr><td class="no">3</td><td>山药</td><td class="r">6斤</td><td class="r">9元</td><td class="r amt">54元</td></tr>
+        <tr><td class="no">4</td><td>红薯</td><td class="r">40斤</td><td class="r">3元</td><td class="r amt">120元</td></tr>
+      </table>
+      <div class="total"><span class="lab">合计</span><span class="val">334元</span></div>
+      <div class="foot">货已核对 · 谢谢惠顾</div>
+    </div>
+  </div>
+
+  <div class="card" id="v2">
+    <h2>V2 · 大字清单 · 总价置底</h2>
+    <p class="why">一行一个品，品名最大，下面「数量 × 单价 = 金额」一行讲清。最下面合计最大、居中，最显眼。</p>
+    <div class="paper v2">
+      <div class="store">老张蔬菜批发</div>
+      <div class="sub">姜蒜山药红薯 · 现称现卖</div>
+      <div class="divider"></div>
+      <div class="meta"><b>单号</b> 20260921-001　<b>时间</b> 08:30　<b>备注</b> 张老板</div>
+      <div class="item"><div class="nm">生姜</div><div class="row">10斤 × 6元 = <span class="amt">60元</span></div></div>
+      <div class="item"><div class="nm">大蒜</div><div class="row">20斤 × 5元 = <span class="amt">100元</span></div></div>
+      <div class="item"><div class="nm">山药</div><div class="row">6斤 × 9元 = <span class="amt">54元</span></div></div>
+      <div class="item"><div class="nm">红薯</div><div class="row">40斤 × 3元 = <span class="amt">120元</span></div></div>
+      <div class="total"><div class="lab">合计</div><div class="val">334元</div></div>
+      <div class="foot">货已核对 · 谢谢惠顾</div>
+    </div>
+  </div>
+
+  <div class="card" id="v3">
+    <h2>V3 · 总价置顶</h2>
+    <p class="why">最上面先亮「该付多少钱」，金额最大、红框圈住；明细在下面供核对。适合客户只看总额、催款用。</p>
+    <div class="paper v3">
+      <div class="pay"><div class="lab">应付金额</div><div class="val">334元</div></div>
+      <div class="store" style="font-size:24px;">老张蔬菜批发</div>
+      <div class="sub">姜蒜山药红薯 · 现称现卖</div>
+      <div class="divider"></div>
+      <div class="item"><span class="l"><span class="n">1</span>生姜 <span class="d">10斤×6元</span></span><span class="r">60元</span></div>
+      <div class="item"><span class="l"><span class="n">2</span>大蒜 <span class="d">20斤×5元</span></span><span class="r">100元</span></div>
+      <div class="item"><span class="l"><span class="n">3</span>山药 <span class="d">6斤×9元</span></span><span class="r">54元</span></div>
+      <div class="item"><span class="l"><span class="n">4</span>红薯 <span class="d">40斤×3元</span></span><span class="r">120元</span></div>
+      <div class="divider"></div>
+      <div class="meta"><b>单号</b> 20260921-001　<b>时间</b> 08:30　<b>备注</b> 张老板</div>
+      <div class="foot">货已核对 · 谢谢惠顾</div>
+    </div>
+  </div>
+
+  <div class="card" id="v4">
+    <h2>V4 · 手写票（窄纸）</h2>
+    <p class="why">像手写小票，窄纸、居中。品名和金额左右分开，一眼扫下来金额全在右侧一列，合计压底。</p>
+    <div class="paper v4">
+      <div class="store">老张蔬菜批发</div>
+      <div class="sub">姜蒜山药红薯 · 现称现卖</div>
+      <div class="divider"></div>
+      <div class="meta"><b>单号</b> 20260921-001<br><b>时间</b> 2026-09-21 08:30<br><b>备注</b> 张老板</div>
+      <div class="item"><span class="l">生姜<span class="d">10斤×6</span></span><span class="r">60元</span></div>
+      <div class="item"><span class="l">大蒜<span class="d">20斤×5</span></span><span class="r">100元</span></div>
+      <div class="item"><span class="l">山药<span class="d">6斤×9</span></span><span class="r">54元</span></div>
+      <div class="item"><span class="l">红薯<span class="d">40斤×3</span></span><span class="r">120元</span></div>
+      <div class="total"><span class="lab">合计</span><span class="val">334元</span></div>
+      <div class="foot">货已核对 · 谢谢惠顾</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

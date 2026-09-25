@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#2b3a55">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="老板开财">
+<title>老板开财</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png?v=15">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=15">
+<link rel="stylesheet" href="css/app.css?v=17">
+<script>
+(function () {
+  try {
+    if (sessionStorage.getItem('bm.unlocked.v2') === '1') {
+      document.documentElement.classList.add('pin-ok');
+      return;
+    }
+    var raw = localStorage.getItem('bm.pin.v2');
+    if (!raw) { document.documentElement.classList.add('pin-ok'); return; }
+    var rec = JSON.parse(raw);
+    if (!rec || !rec.hash) document.documentElement.classList.add('pin-ok');
+  } catch (e) {
+    document.documentElement.classList.add('pin-ok');
+  }
+})();
+</script>
+</head>
+<body>
+
+<div id="pinLock" class="pin-lock">
+  <div class="pin-card">
+    <div class="pin-brand">💰 老板开财</div>
+    <div id="pinSuggest" hidden>
+      <h2>建议设个开机密码</h2>
+      <p class="pin-lead">网页放到网上之后，知道地址的人都能看见单据。设 4 位数字，只有自己能进。</p>
+      <button type="button" class="mbtn ok" id="pinSuggestOk">设置密码</button>
+      <button type="button" class="mbtn cancel" id="pinSuggestLater">先用着</button>
+    </div>
+    <div id="pinEntry">
+      <h2 id="pinTitle">输入开机密码</h2>
+      <div class="pin-dots" id="pinDots"></div>
+      <p class="pin-lead" id="pinHint">4 到 6 位数字</p>
+      <div class="pin-pad" id="pinPad">
+        <button type="button" data-n="1">1</button>
+        <button type="button" data-n="2">2</button>
+        <button type="button" data-n="3">3</button>
+        <button type="button" data-n="4">4</button>
+        <button type="button" data-n="5">5</button>
+        <button type="button" data-n="6">6</button>
+        <button type="button" data-n="7">7</button>
+        <button type="button" data-n="8">8</button>
+        <button type="button" data-n="9">9</button>
+        <button type="button" class="pin-del" data-n="del">⌫</button>
+        <button type="button" data-n="0">0</button>
+        <button type="button" class="pin-go" data-n="ok">确定</button>
+      </div>
+      <button type="button" class="pin-forgot" id="pinForgot">忘记密码</button>
+      <button type="button" class="pin-forgot" id="pinCancel" hidden>取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ============ 开单页 ============ -->
+  <section class="page active" id="pageBill">
+    <header class="toolbar">
+      <span class="title" id="billTitle">💰 老板开财</span>
+      <button class="tbtn" id="btnCopyDraft">📋 复制</button>
+      <button class="tbtn" id="btnClearDraft">🗑️ 清空</button>
+      <button class="tbtn icon" id="btnMenu">☰</button>
+    </header>
+
+    <div class="bill-main">
+      <div class="calc-tape">
+        <div class="tape-body" id="tapeBody"></div>
+        <div class="tape-total"><span>合计</span><b id="rTotal">0</b></div>
+      </div>
+      <div class="calc-pad">
+        <div class="calc-lcd" id="calcLcd">0</div>
+        <div class="meta-keys">
+          <button type="button" class="k meta" id="btnPlate">车号</button>
+          <button type="button" class="k meta" id="btnNote">备注</button>
+        </div>
+        <div class="prod-keys" id="prodCol"></div>
+        <div class="keypad">
+          <button class="k" data-n="7">7</button>
+          <button class="k" data-n="8">8</button>
+          <button class="k" data-n="9">9</button>
+          <button class="k fn" id="btnBackspace">⌫</button>
+          <button class="k" data-n="4">4</button>
+          <button class="k" data-n="5">5</button>
+          <button class="k" data-n="6">6</button>
+          <button class="k op" id="btnTimes">×</button>
+          <button class="k" data-n="1">1</button>
+          <button class="k" data-n="2">2</button>
+          <button class="k" data-n="3">3</button>
+          <button class="k op" id="btnEquals">=</button>
+          <button class="k" data-n="00">00</button>
+          <button class="k" data-n="0">0</button>
+          <button class="k enter" id="btnFinish">完成本单</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 历史页 ============ -->
+  <section class="page" id="pageHistory">
+    <header class="toolbar">
+      <button class="tbtn icon back" data-back>←</button>
+      <span class="title">📚 历史单据</span>
+    </header>
+    <div class="page-body">
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">今日</div>
+          <div class="stat-value" id="statTodayTotal">0元</div>
+          <div class="stat-sub" id="statTodayCount">0 单</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">本月</div>
+          <div class="stat-value" id="statMonthTotal">0元</div>
+          <div class="stat-sub" id="statMonthCount">0 单</div>
+        </div>
+      </div>
+      <p class="hist-store-note" id="histStoreNote">单据存在这台手机的浏览器里，不上网，也没有过期天数。清理浏览器数据或换手机会丢，需要的话去设置里备份。</p>
+      <div id="historyList"></div>
+    </div>
+  </section>
+
+  <!-- ============ 品类管理页 ============ -->
+  <section class="page" id="pageProducts">
+    <header class="toolbar">
+      <button class="tbtn icon back" data-back>←</button>
+      <span class="title">📦 品类管理</span>
+      <button class="tbtn green" id="btnAddProduct">＋ 新增</button>
+    </header>
+    <div class="page-body">
+      <div id="productList"></div>
+      <p class="hint">这里改的名称和价格长期生效。只想改这一单：退格改单价，点纸带上的那一行可以改名。</p>
+    </div>
+  </section>
+
+  <!-- ============ 设置页 ============ -->
+  <section class="page" id="pageSettings">
+    <header class="toolbar">
+      <button class="tbtn icon back" data-back>←</button>
+      <span class="title">⚙️ 设置</span>
+    </header>
+    <div class="page-body">
+      <div class="card">
+        <h4>小票抬头</h4>
+        <label class="field"><span>店名</span><input type="text" id="setStoreName" maxlength="20" placeholder="蔬菜批发"></label>
+        <label class="field"><span>副标题</span><input type="text" id="setSubtitle" maxlength="40" placeholder="姜蒜山药红薯 · 现称现卖"></label>
+        <label class="field"><span>页脚</span><input type="text" id="setFooter" maxlength="40" placeholder="货已核对 · 谢谢惠顾"></label>
+        <button class="wbtn primary" id="btnSaveSettings">保存抬头</button>
+      </div>
+
+      <div class="card">
+        <h4>开机密码</h4>
+        <p class="card-note" id="pinNote">网页放到网上后，知道地址的人都能看见单据。建议设 4 位数字密码。</p>
+        <button class="wbtn primary" id="btnSetPin">设置开机密码</button>
+        <button class="wbtn" id="btnChangePin" hidden>修改密码</button>
+        <button class="wbtn" id="btnClearPin" hidden>关闭开机密码</button>
+      </div>
+
+      <div class="card">
+        <h4>离线使用</h4>
+        <p class="card-note">用手机浏览器打开后，点菜单里的「添加到主屏幕」。之后没网也能开单。网站更新后，再打开一两次就会自动换成新版。</p>
+      </div>
+
+      <div class="card">
+        <h4>数据备份</h4>
+        <p class="card-note">单据存在这台手机的浏览器里，不设过期天数。清理浏览器数据、换手机都会丢，建议定期导出一份备份存到微信收藏。</p>
+        <button class="wbtn" id="btnExportFile">导出备份文件</button>
+        <button class="wbtn" id="btnExportText">复制备份文本</button>
+        <button class="wbtn" id="btnImportFile">从文件恢复</button>
+        <button class="wbtn" id="btnImportText">粘贴文本恢复</button>
+        <input type="file" id="importFileInput" accept=".json,application/json" hidden>
+      </div>
+
+      <div class="card danger">
+        <h4>危险操作</h4>
+        <p class="card-note">清空后所有单据、品类、设置都会消失，且无法撤销。</p>
+        <button class="wbtn danger" id="btnClearAll">清空全部数据</button>
+      </div>
+
+      <p class="hint">老板开财 · 纯本地运行 · 无需联网</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ 弹窗 ============ -->
+
+<!-- 数字输入 -->
+<div class="modal-mask" id="numModal">
+  <div class="modal">
+    <h3 id="numTitle">输入</h3>
+    <div class="num-display" id="numDisplay">0</div>
+    <label class="check-row" id="numCheckRow">
+      <input type="checkbox" id="numCheck">
+      <span id="numCheckLabel"></span>
+    </label>
+    <div class="bigpad" id="numPad">
+      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button>
+      <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
+      <button data-n="7">7</button><button data-n="8">8</button><button data-n="9">9</button>
+      <button data-n=".">.</button><button data-n="0">0</button><button class="bk-del" data-n="del">⌫</button>
+    </div>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>取消</button>
+      <button class="mbtn ok" id="numOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 文本输入 -->
+<div class="modal-mask" id="textModal">
+  <div class="modal">
+    <h3 id="textTitle">输入</h3>
+    <textarea id="textInput" rows="3" placeholder=""></textarea>
+    <p class="modal-hint" id="textHint"></p>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>取消</button>
+      <button class="mbtn ok" id="textOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 车牌 -->
+<div class="modal-mask" id="plateModal">
+  <div class="modal wide">
+    <h3>🚚 录入车号</h3>
+    <div class="plate-display" id="plateDisplay"></div>
+    <div class="recent-plates" id="recentPlates"></div>
+    <div class="prov-row" id="provRow"></div>
+    <div class="alnum" id="alnumPad"></div>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>取消</button>
+      <button class="mbtn warn" id="plateClear">不填</button>
+      <button class="mbtn ok" id="plateOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 品类编辑 -->
+<div class="modal-mask" id="productModal">
+  <div class="modal">
+    <h3 id="productTitle">品类</h3>
+    <label class="field"><span>图标</span><input type="text" id="prodEmoji" maxlength="4" placeholder="📦"></label>
+    <label class="field"><span>名称</span><input type="text" id="prodName" maxlength="10" placeholder="生姜"></label>
+    <label class="field"><span>单价</span><input type="text" id="prodPrice" inputmode="decimal" placeholder="6"></label>
+    <label class="field"><span>单位</span><input type="text" id="prodUnit" maxlength="4" placeholder="斤"></label>
+    <div class="emoji-picker" id="emojiPicker"></div>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>取消</button>
+      <button class="mbtn ok" id="prodOk">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 小票预览 -->
+<div class="modal-mask" id="previewModal">
+  <div class="modal">
+    <h3 id="previewTitle">📸 电子小票</h3>
+    <div class="img-box"><img id="previewImg" alt="小票图片"></div>
+    <p class="modal-hint">手机：<b>长按图片 → 保存到相册</b>，然后发微信<br>电脑：<a id="previewDownload" download="小票.png">点这里下载图片</a></p>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>关闭</button>
+      <button class="mbtn ok" id="previewCopy">复制文字</button>
+    </div>
+    <div class="close-row" id="previewExtraRow">
+      <button class="mbtn warn" id="previewDelete">删除这张单</button>
+    </div>
+  </div>
+</div>
+
+<!-- 操作条 -->
+<div class="modal-mask sheet-mask" id="sheetModal">
+  <div class="sheet">
+    <div class="sheet-title" id="sheetTitle"></div>
+    <div id="sheetList"></div>
+    <button class="sheet-item cancel" data-close>取消</button>
+  </div>
+</div>
+
+<!-- 复制失败：给微信长按全选 -->
+<div class="modal-mask" id="copyModal">
+  <div class="modal">
+    <h3>长按全选复制</h3>
+    <textarea id="copyBox" class="copy-box" rows="8" readonly></textarea>
+    <p class="modal-hint">自动复制没成功。请长按上面文字 → 全选 → 复制，再到微信粘贴。</p>
+    <div class="close-row">
+      <button class="mbtn ok" data-close>关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 确认框 -->
+<div class="modal-mask" id="confirmModal">
+  <div class="modal narrow">
+    <h3 id="confirmTitle">确认</h3>
+    <p class="confirm-msg" id="confirmMsg"></p>
+    <div class="close-row">
+      <button class="mbtn cancel" data-close>取消</button>
+      <button class="mbtn ok" id="confirmOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/store.js?v=10"></script>
+<script src="js/receipt.js?v=16"></script>
+<script src="js/export.js?v=17"></script>
+<script src="js/keypad.js?v=10"></script>
+<script src="js/app.js?v=17"></script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>开单界面 · 设计对比（不改原项目）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#d4d7dc;color:#111;padding:16px 16px 60px;}
+h1{font-size:22px;margin-bottom:6px;}
+.intro{font-size:15px;line-height:1.7;color:#333;max-width:1100px;margin-bottom:18px;}
+.intro b{color:#000;}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;position:sticky;top:0;background:#d4d7dc;padding:8px 0;z-index:5;}
+nav a{background:#fff;color:#111;text-decoration:none;padding:8px 12px;border:2px solid #111;font-size:14px;font-weight:700;}
+nav a:hover{background:#111;color:#fff;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px;}
+.card{background:#fff;border:2px solid #222;padding:12px 12px 16px;}
+.card h2{font-size:18px;margin-bottom:4px;}
+.card .why{font-size:13px;line-height:1.6;color:#444;margin-bottom:10px;min-height:64px;}
+.phone{width:100%;max-width:390px;height:720px;border:3px solid #111;background:#eceef1;display:flex;flex-direction:column;overflow:hidden;margin:0 auto;}
+.bar{background:#1c2433;color:#fff;padding:10px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bar .t{font-size:18px;font-weight:800;flex:1;}
+.bar button{background:#fff;color:#111;border:0;font-size:14px;font-weight:700;padding:7px 9px;}
+.main{flex:1;display:flex;min-height:0;}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;background:#dfe3e8;flex-shrink:0;}
+.keys b{height:46px;background:#fff;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.keys b.g{background:#1a8f3a;color:#fff;border-color:#0d5c22;grid-column:span 2;font-size:18px;}
+.keys b.r{background:#ffe8e6;color:#b42318;}
+.keys b.o{background:#fff4d6;color:#9a6700;font-size:16px;}
+
+/* 公共：行信息四件套 */
+.meta{padding:8px 10px;font-size:15px;line-height:1.8;border-bottom:2px dashed #bbb;}
+.tot{padding:10px 12px;font-size:28px;font-weight:900;text-align:right;border-top:3px solid #111;color:#e31c23;}
+.tot span{font-size:18px;font-weight:800;margin-right:8px;color:#e31c23;}
+
+/* ===== A 账本表 ===== */
+.A .left{width:42%;padding:8px;display:flex;flex-direction:column;gap:10px;overflow:auto;}
+.A .pb{background:#fff;border:2px solid #222;padding:10px 8px;text-align:left;}
+.A .pb .n{font-size:28px;font-weight:900;line-height:1;}
+.A .pb .nm{font-size:22px;font-weight:800;}
+.A .pb .pr{font-size:18px;margin-top:4px;}
+.A .pb.on{border-width:4px;background:#fff8d6;}
+.A .right{flex:1;display:flex;flex-direction:column;min-width:0;background:#fffdf6;border-left:2px solid #222;}
+.A .paper{flex:1;overflow:auto;}
+.A table{width:100%;border-collapse:collapse;font-size:16px;}
+.A th{text-align:left;padding:8px 6px;border-bottom:2px solid #111;font-size:13px;background:#f3efe3;}
+.A td{padding:10px 6px;border-bottom:2px solid #e6e0d0;vertical-align:top;}
+.A td.num{font-size:22px;font-weight:900;}
+.A td.nm{font-size:20px;font-weight:800;}
+.A td.q,.A td.p,.A td.m{font-size:20px;font-weight:800;}
+.A tr.cur{background:#fff3a3;}
+.A .lab{display:block;font-size:11px;font-weight:700;color:#666;}
+
+/* ===== B 标签块 ===== */
+.B .left{width:38%;padding:8px;display:flex;flex-direction:column;gap:12px;overflow:auto;}
+.B .pb{background:#fff;border:3px solid #111;padding:12px 8px;}
+.B .pb .top{display:flex;align-items:baseline;gap:8px;}
+.B .pb .n{font-size:36px;font-weight:900;line-height:1;}
+.B .pb .nm{font-size:24px;font-weight:800;}
+.B .pb .pr{font-size:20px;margin-top:8px;font-weight:800;}
+.B .pb.on{background:#111;color:#fff;}
+.B .right{flex:1;background:#fff;border-left:3px solid #111;overflow:auto;padding:10px;}
+.B .line{border:3px solid #111;padding:12px;margin-bottom:12px;}
+.B .line.cur{background:#fff8c8;}
+.B .line .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+.B .line .h .n{font-size:28px;font-weight:900;}
+.B .line .h .nm{font-size:24px;font-weight:800;}
+.B .kv{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.B .kv div{border:2px solid #111;padding:8px 6px;}
+.B .kv .l{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:2px;}
+.B .kv .v{font-size:22px;font-weight:900;}
+
+/* ===== C 上下结构 ===== */
+.C .main{flex-direction:column;}
+.C .prods{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;flex-shrink:0;}
+.C .pb{background:#fff;border:3px solid #111;padding:10px;display:flex;align-items:center;gap:10px;}
+.C .pb .n{font-size:32px;font-weight:900;width:36px;}
+.C .pb .nm{font-size:22px;font-weight:800;}
+.C .pb .pr{font-size:18px;font-weight:800;}
+.C .pb.on{background:#fff4a8;border-width:4px;}
+.C .paper{flex:1;overflow:auto;background:#fff;margin:0 8px;border:3px solid #111;padding:8px;}
+.C .row{display:grid;grid-template-columns:36px 1fr;gap:8px;padding:10px 6px;border-bottom:2px solid #ddd;}
+.C .row.cur{background:#fff8c8;}
+.C .row .n{font-size:28px;font-weight:900;}
+.C .row .nm{font-size:22px;font-weight:800;margin-bottom:8px;}
+.C .facts{display:flex;gap:10px;flex-wrap:wrap;}
+.C .facts b{font-size:20px;font-weight:900;border:2px solid #111;padding:6px 8px;background:#f7f7f7;}
+.C .facts b em{font-style:normal;font-size:13px;font-weight:700;display:block;color:#555;}
+
+/* ===== D 竖排清单 ===== */
+.D .left{width:34%;padding:6px;display:flex;flex-direction:column;gap:8px;}
+.D .pb{background:#fff;border:2px solid #111;padding:8px;text-align:center;}
+.D .pb .n{font-size:26px;font-weight:900;}
+.D .pb .nm{font-size:20px;font-weight:800;}
+.D .pb .pr{font-size:16px;font-weight:800;margin-top:4px;}
+.D .pb.on{outline:4px solid #000;}
+.D .right{flex:1;overflow:auto;background:#fff;padding:10px;}
+.D .line{margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #111;}
+.D .line.cur{background:#ffef9a;margin:0 -10px 16px;padding:12px 10px;}
+.D .ttl{font-size:26px;font-weight:900;margin-bottom:8px;}
+.D .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.D .cell{border:2px solid #111;padding:8px;}
+.D .cell .l{font-size:14px;font-weight:800;color:#333;}
+.D .cell .v{font-size:24px;font-weight:900;}
+.D .cell.full{grid-column:1 / -1;background:#111;color:#fff;}
+.D .cell.full .l{color:#ccc;}
+
+/* ===== E 等权四列 ===== */
+.E .left{width:40%;padding:8px;display:flex;flex-direction:column;gap:10px;}
+.E .pb{display:grid;grid-template-columns:44px 1fr;background:#fff;border:3px solid #111;padding:10px;align-items:center;}
+.E .pb .n{font-size:32px;font-weight:900;}
+.E .pb .nm{font-size:22px;font-weight:800;}
+.E .pb .pr{font-size:18px;font-weight:800;}
+.E .pb.on{background:#000;color:#fff;}
+.E .right{flex:1;overflow:auto;background:#fffef8;padding:8px;}
+.E .head4,.E .row4{display:grid;grid-template-columns:1.1fr .9fr .9fr 1fr;gap:6px;align-items:stretch;}
+.E .head4 span{font-size:13px;font-weight:800;padding:6px;background:#111;color:#fff;text-align:center;}
+.E .row4{margin-top:10px;}
+.E .row4 > div{border:3px solid #111;padding:8px 6px;min-height:64px;}
+.E .row4.cur > div{background:#fff3a0;}
+.E .row4 .l{display:block;font-size:12px;font-weight:800;color:#555;}
+.E .row4 .v{font-size:22px;font-weight:900;word-break:break-all;}
+</style>
+</head>
+<body>
+<h1>开单界面对比（静态样稿，不改原项目）</h1>
+<p class="intro">
+  同一组数据：<b>1水泥 2.5吨 × 320 = 800</b>　<b>2砂石 13方 × 85 = 1105</b>　<b>3钢筋 0.25吨 × 3800 = 950</b>（正在敲数量）。<br>
+  共同原则：品类带序号 1 2 3 4；字更大、空更开；<b>数量、单价</b>和<b>名称、行金额</b>同等清晰。点开下面锚点可跳到某一版。看完告诉我选哪一版，或哪几版拼起来用。
+</p>
+<nav>
+  <a href="#a">A 账本表</a>
+  <a href="#b">B 标签块</a>
+  <a href="#c">C 品类在上</a>
+  <a href="#d">D 竖排四格</a>
+  <a href="#e">E 等权四列</a>
+</nav>
+
+<div class="grid">
+
+  <div class="card" id="a">
+    <h2>A · 账本表</h2>
+    <p class="why">小票像账本：名称 / 数量 / 单价 / 金额 四列并排，列头写死。适合一眼对账。左边序号大、品名大、默认价也大。</p>
+    <div class="phone A">
+      <div class="bar"><span class="t">快速开单</span><button>复制</button><button>清空</button></div>
+      <div class="main">
+        <div class="left">
+          <div class="pb on"><div class="n">1</div><div class="nm">水泥</div><div class="pr">320元 / 吨</div></div>
+          <div class="pb"><div class="n">2</div><div class="nm">砂石</div><div class="pr">85元 / 方</div></div>
+          <div class="pb"><div class="n">3</div><div class="nm">砖块</div><div class="pr">1.2元 / 块</div></div>
+          <div class="pb"><div class="n">4</div><div class="nm">钢筋</div><div class="pr">3800元 / 吨</div></div>
+        </div>
+        <div class="right">
+          <div class="paper">
+            <div class="meta">单号 20260909-001<br>车号 浙A12345<br>备注 张老板</div>
+            <table>
+              <tr><th></th><th>名称</th><th>数量</th><th>单价</th><th>金额</th></tr>
+              <tr>
+                <td class="num">1</td>
+                <td class="nm">水泥</td>
+                <td class="q"><span class="lab">数量</span>2.5吨</td>
+                <td class="p"><span class="lab">单价</span>320</td>
+                <td class="m"><span class="lab">金额</span>800</td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td class="nm">砂石</td>
+                <td class="q"><span class="lab">数量</span>13方</td>
+                <td class="p"><span class="lab">单价</span>85</td>
+                <td class="m"><span class="lab">金额</span>1105</td>
+              </tr>
+              <tr class="cur">
+                <td class="num">4</td>
+                <td class="nm">钢筋</td>
+                <td class="q"><span class="lab">数量</span>0.25▌</td>
+                <td class="p"><span class="lab">单价</span>3800</td>
+                <td class="m"><span class="lab">金额</span>950</td>
+              </tr>
+            </table>
+          </div>
+          <div class="tot"><span>合计</span>2855元</div>
+        </div>
+      </div>
+      <div class="keys"><b>7</b><b>8</b><b>9</b><b class="r">退格</b><b>4</b><b>5</b><b>6</b><b class="o">改名</b><b>1</b><b>2</b><b>3</b><b class="o">改价</b><b>0</b><b>.</b><b class="g">完成本单</b></div>
+    </div>
+  </div>
+
+  <div class="card" id="b">
+    <h2>B · 标签块</h2>
+    <p class="why">每一行是一张卡片。数量、单价、金额三块并排、同样大字、都带标签。选中的品类按钮反白。空隙最大，远看也能读。</p>
+    <div class="phone B">
+      <div class="bar"><span class="t">快速开单</span><button>复制</button><button>清空</button></div>
+      <div class="main">
+        <div class="left">
+          <div class="pb"><div class="top"><span class="n">1</span><span class="nm">水泥</span></div><div class="pr">320元/吨</div></div>
+          <div class="pb"><div class="top"><span class="n">2</span><span class="nm">砂石</span></div><div class="pr">85元/方</div></div>
+          <div class="pb"><div class="top"><span class="n">3</span><span class="nm">砖块</span></div><div class="pr">1.2元/块</div></div>
+          <div class="pb on"><div class="top"><span class="n">4</span><span class="nm">钢筋</span></div><div class="pr">3800元/吨</div></div>
+        </div>
+        <div class="right">
+          <div class="meta">单号 20260909-001　车号 浙A12345<br>备注 张老板</div>
+          <div class="line">
+            <div class="h"><span class="n">1</span><span class="nm">水泥</span></div>
+            <div class="kv">
+              <div><span class="l">数量</span><span class="v">2.5吨</span></div>
+              <div><span class="l">单价</span><span class="v">320</span></div>
+              <div><span class="l">金额</span><span class="v">800</span></div>
+            </div>
+          </div>
+          <div class="line">
+            <div class="h"><span class="n">2</span><span class="nm">砂石</span></div>
+            <div class="kv">
+              <div><span class="l">数量</span><span class="v">13方</span></div>
+              <div><span class="l">单价</span><span class="v">85</span></div>
+              <div><span class="l">金额</span><span class="v">1105</span></div>
+            </div>
+          </div>
+          <div class="line cur">
+            <div class="h"><span class="n">4</span><span class="nm">钢筋</span></div>
+            <div class="kv">
+              <div><span class="l">数量</span><span class="v">0.25▌</span></div>
+              <div><span class="l">单价</span><span class="v">3800</span></div>
+              <div><span class="l">金额</span><span class="v">950</span></div>
+            </div>
+          </div>
+          <div class="tot"><span>合计</span>2855元</div>
+        </div>
+      </div>
+      <div class="keys"><b>7</b><b>8</b><b>9</b><b class="r">退格</b><b>4</b><b>5</b><b>6</b><b class="o">改名</b><b>1</b><b>2</b><b>3</b><b class="o">改价</b><b>0</b><b>.</b><b class="g">完成本单</b></div>
+    </div>
+  </div>
+
+  <div class="card" id="c">
+    <h2>C · 品类在上</h2>
+    <p class="why">不左右分栏。品类 2×2 放大贴顶，下面整宽写行。数量/单价/金额做成带标签的黑框，互不挤。适合怕左边太窄看不清价的情况。</p>
+    <div class="phone C">
+      <div class="bar"><span class="t">快速开单</span><button>复制</button><button>清空</button></div>
+      <div class="main">
+        <div class="prods">
+          <div class="pb"><div class="n">1</div><div><div class="nm">水泥</div><div class="pr">320元/吨</div></div></div>
+          <div class="pb"><div class="n">2</div><div><div class="nm">砂石</div><div class="pr">85元/方</div></div></div>
+          <div class="pb"><div class="n">3</div><div><div class="nm">砖块</div><div class="pr">1.2元/块</div></div></div>
+          <div class="pb on"><div class="n">4</div><div><div class="nm">钢筋</div><div class="pr">3800元/吨</div></div></div>
+        </div>
+        <div class="paper">
+          <div class="meta">单号 20260909-001　车号 浙A12345　备注 张老板</div>
+          <div class="row">
+            <div class="n">1</div>
+            <div>
+              <div class="nm">水泥</div>
+              <div class="facts">
+                <b><em>数量</em>2.5吨</b>
+                <b><em>单价</em>320</b>
+                <b><em>金额</em>800</b>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="n">2</div>
+            <div>
+              <div class="nm">砂石</div>
+              <div class="facts">
+                <b><em>数量</em>13方</b>
+                <b><em>单价</em>85</b>
+                <b><em>金额</em>1105</b>
+              </div>
+            </div>
+          </div>
+          <div class="row cur">
+            <div class="n">4</div>
+            <div>
+              <div class="nm">钢筋</div>
+              <div class="facts">
+                <b><em>数量</em>0.25▌</b>
+                <b><em>单价</em>3800</b>
+                <b><em>金额</em>950</b>
+              </div>
+            </div>
+          </div>
+          <div class="tot"><span>合计</span>2855元</div>
+        </div>
+      </div>
+      <div class="keys"><b>7</b><b>8</b><b>9</b><b class="r">退格</b><b>4</b><b>5</b><b>6</b><b class="o">改名</b><b>1</b><b>2</b><b>3</b><b class="o">改价</b><b>0</b><b>.</b><b class="g">完成本单</b></div>
+    </div>
+  </div>
+
+  <div class="card" id="d">
+    <h2>D · 竖排四格</h2>
+    <p class="why">名称单独一行超大。下面四个格子：数量、单价、单位、金额。金额黑底反白，不会和单价搞混。适合戴老花镜、要一个字一个字看。</p>
+    <div class="phone D">
+      <div class="bar"><span class="t">快速开单</span><button>复制</button><button>清空</button></div>
+      <div class="main">
+        <div class="left">
+          <div class="pb"><div class="n">1</div><div class="nm">水泥</div><div class="pr">320/吨</div></div>
+          <div class="pb"><div class="n">2</div><div class="nm">砂石</div><div class="pr">85/方</div></div>
+          <div class="pb"><div class="n">3</div><div class="nm">砖块</div><div class="pr">1.2/块</div></div>
+          <div class="pb on"><div class="n">4</div><div class="nm">钢筋</div><div class="pr">3800/吨</div></div>
+        </div>
+        <div class="right">
+          <div class="meta">单号 20260909-001<br>车号 浙A12345<br>备注 张老板</div>
+          <div class="line">
+            <div class="ttl">1　水泥</div>
+            <div class="g">
+              <div class="cell"><div class="l">数量</div><div class="v">2.5</div></div>
+              <div class="cell"><div class="l">单位</div><div class="v">吨</div></div>
+              <div class="cell"><div class="l">单价</div><div class="v">320</div></div>
+              <div class="cell full"><div class="l">金额</div><div class="v">800元</div></div>
+            </div>
+          </div>
+          <div class="line">
+            <div class="ttl">2　砂石</div>
+            <div class="g">
+              <div class="cell"><div class="l">数量</div><div class="v">13</div></div>
+              <div class="cell"><div class="l">单位</div><div class="v">方</div></div>
+              <div class="cell"><div class="l">单价</div><div class="v">85</div></div>
+              <div class="cell full"><div class="l">金额</div><div class="v">1105元</div></div>
+            </div>
+          </div>
+          <div class="line cur">
+            <div class="ttl">4　钢筋</div>
+            <div class="g">
+              <div class="cell"><div class="l">数量</div><div class="v">0.25▌</div></div>
+              <div class="cell"><div class="l">单位</div><div class="v">吨</div></div>
+              <div class="cell"><div class="l">单价</div><div class="v">3800</div></div>
+              <div class="cell full"><div class="l">金额</div><div class="v">950元</div></div>
+            </div>
+          </div>
+          <div class="tot"><span>合计</span>2855元</div>
+        </div>
+      </div>
+      <div class="keys"><b>7</b><b>8</b><b>9</b><b class="r">退格</b><b>4</b><b>5</b><b>6</b><b class="o">改名</b><b>1</b><b>2</b><b>3</b><b class="o">改价</b><b>0</b><b>.</b><b class="g">完成本单</b></div>
+    </div>
+  </div>
+
+  <div class="card" id="e">
+    <h2>E · 等权四列</h2>
+    <p class="why">名称、数量、单价、金额四块一样宽、一样高、一样字号。没有“金额最大、数量藏起来”的问题。列头永远钉在上面。最接近你说的「一样清晰」。</p>
+    <div class="phone E">
+      <div class="bar"><span class="t">快速开单</span><button>复制</button><button>清空</button></div>
+      <div class="main">
+        <div class="left">
+          <div class="pb"><div class="n">1</div><div><div class="nm">水泥</div><div class="pr">320元/吨</div></div></div>
+          <div class="pb"><div class="n">2</div><div><div class="nm">砂石</div><div class="pr">85元/方</div></div></div>
+          <div class="pb"><div class="n">3</div><div><div class="nm">砖块</div><div class="pr">1.2元/块</div></div></div>
+          <div class="pb on"><div class="n">4</div><div><div class="nm">钢筋</div><div class="pr">3800元/吨</div></div></div>
+        </div>
+        <div class="right">
+          <div class="meta">单号 20260909-001<br>车号 浙A12345<br>备注 张老板</div>
+          <div class="head4"><span>名称</span><span>数量</span><span>单价</span><span>金额</span></div>
+          <div class="row4">
+            <div><span class="l">1</span><span class="v">水泥</span></div>
+            <div><span class="l">数量</span><span class="v">2.5吨</span></div>
+            <div><span class="l">单价</span><span class="v">320</span></div>
+            <div><span class="l">金额</span><span class="v">800</span></div>
+          </div>
+          <div class="row4">
+            <div><span class="l">2</span><span class="v">砂石</span></div>
+            <div><span class="l">数量</span><span class="v">13方</span></div>
+            <div><span class="l">单价</span><span class="v">85</span></div>
+            <div><span class="l">金额</span><span class="v">1105</span></div>
+          </div>
+          <div class="row4 cur">
+            <div><span class="l">4</span><span class="v">钢筋</span></div>
+            <div><span class="l">数量</span><span class="v">0.25▌</span></div>
+            <div><span class="l">单价</span><span class="v">3800</span></div>
+            <div><span class="l">金额</span><span class="v">950</span></div>
+          </div>
+          <div class="tot"><span>合计</span>2855元</div>
+        </div>
+      </div>
+      <div class="keys"><b>7</b><b>8</b><b>9</b><b class="r">退格</b><b>4</b><b>5</b><b>6</b><b class="o">改名</b><b>1</b><b>2</b><b>3</b><b class="o">改价</b><b>0</b><b>.</b><b class="g">完成本单</b></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
